@@ -1,0 +1,134 @@
+# Zeabur Configuration for Swarm TM Frontend
+# React 19 + Vite threat modeling dashboard
+
+name: swarm-tm-frontend
+
+services:
+  - name: frontend
+    type: static
+
+    # Build Configuration
+    build:
+      # Node.js version
+      runtime: node-20
+
+      # Install command
+      install: npm install
+
+      # Build command
+      build: npm run build
+
+      # Output directory (Vite builds to dist/)
+      outputDirectory: dist
+
+      # Static file serving with nginx
+      staticServe: true
+
+    # Environment Variables
+    # CRITICAL: These are injected at BUILD TIME by Vite, not runtime
+    env:
+      # Backend API URL (REQUIRED - update after backend deployment)
+      VITE_API_BASE_URL: http://localhost:8000
+
+      # For production, update to your deployed backend URL:
+      # VITE_API_BASE_URL: https://swarm-tm-backend-xxx.zeabur.app
+      # Or custom domain:
+      # VITE_API_BASE_URL: https://api.yourdomain.com
+
+    # Port Configuration (nginx will serve on port 80 internally)
+    port: 80
+
+    # Health Check
+    healthCheck:
+      path: /
+      interval: 30
+      timeout: 10
+      retries: 3
+
+    # Resource Configuration
+    resources:
+      # Frontend static site needs minimal resources
+      cpu: 0.5
+      memory: 512  # 512MB RAM sufficient for static hosting
+
+    # Deployment Strategy
+    deployment:
+      # Zero-downtime deployment
+      strategy: rolling
+
+      # Auto-restart on failure
+      restartPolicy: always
+
+      # Scaling (multiple replicas for high availability)
+      replicas: 1
+
+    # Custom Headers (optional - for security)
+    headers:
+      X-Frame-Options: DENY
+      X-Content-Type-Options: nosniff
+      X-XSS-Protection: "1; mode=block"
+      Referrer-Policy: no-referrer-when-downgrade
+
+# Alternative Configuration: Using Dockerfile
+# If you prefer nginx-based deployment with Dockerfile instead of static hosting:
+#
+# services:
+#   - name: frontend
+#     type: dockerfile
+#
+#     build:
+#       dockerfile: Dockerfile
+#       context: .
+#
+#       # Build arguments (passed to docker build)
+#       buildArgs:
+#         VITE_API_BASE_URL: ${VITE_API_BASE_URL}
+#
+#     env:
+#       VITE_API_BASE_URL: http://localhost:8000
+#
+#     port: 80
+#
+#     healthCheck:
+#       path: /
+#       interval: 30
+#       timeout: 10
+#       retries: 3
+
+# Instructions for deployment:
+#
+# 1. Deploy Backend First:
+#    - Deploy swarm-tm-backend to Zeabur
+#    - Note the backend URL: https://swarm-tm-backend-xxx.zeabur.app
+#
+# 2. Update VITE_API_BASE_URL:
+#    - Option A: Edit this file before pushing to GitHub
+#      VITE_API_BASE_URL: https://swarm-tm-backend-xxx.zeabur.app
+#
+#    - Option B: Set in Zeabur Dashboard (BEFORE first deployment)
+#      Dashboard → Service → Environment Variables
+#      VITE_API_BASE_URL = https://swarm-tm-backend-xxx.zeabur.app
+#
+#    ⚠️ IMPORTANT: This must be set BEFORE deployment
+#    Vite injects env vars at build time, not runtime
+#
+# 3. Deploy Frontend:
+#    - Push to GitHub or use Zeabur CLI
+#    - Zeabur will automatically use this configuration
+#    - Wait for build to complete (2-5 minutes)
+#
+# 4. Update Backend CORS:
+#    - After frontend deployment, get frontend URL
+#    - Update backend environment variable:
+#      CORS_ORIGINS=https://swarm-tm-frontend-yyy.zeabur.app
+#    - Redeploy backend or restart service
+#
+# 5. Verify:
+#    - Visit frontend URL
+#    - Check for green "Backend: Healthy" banner
+#    - Test uploading IaC file and running threat model
+#
+# 6. To Change Backend URL Later:
+#    - Update VITE_API_BASE_URL in Zeabur Dashboard
+#    - Trigger rebuild/redeploy (push to GitHub or manual redeploy)
+#    - Wait for new build with updated URL
