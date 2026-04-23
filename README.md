@@ -226,6 +226,8 @@ VITE_API_BASE_URL=https://api.yourdomain.com npm run build
 
 Zeabur provides one-click deployment for React applications with automatic HTTPS and CDN.
 
+**📄 Automatic Configuration**: This repository includes `zeabur.yml` which automatically configures build settings, environment variables, health checks, and deployment strategy. Zeabur will use this configuration when you deploy.
+
 #### Option 1: Deploy via GitHub Integration (Recommended)
 
 1. **Push to GitHub** (already done):
