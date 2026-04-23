@@ -28,10 +28,11 @@ services:
     # CRITICAL: These are injected at BUILD TIME by Vite, not runtime
     env:
       # Backend API URL (REQUIRED - update after backend deployment)
-      VITE_API_BASE_URL: http://localhost:8000
+      # IMPORTANT: Override this in Zeabur Dashboard for production
+      VITE_API_BASE_URL: https://swarm-tm-backend-[your-id].zeabur.app
 
-      # For production, update to your deployed backend URL:
-      # VITE_API_BASE_URL: https://swarm-tm-backend-xxx.zeabur.app
+      # For local development:
+      # VITE_API_BASE_URL: http://localhost:8000
       # Or custom domain:
       # VITE_API_BASE_URL: https://api.yourdomain.com
 
