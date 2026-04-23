@@ -1,0 +1,157 @@
+.threat-card {
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  transition: box-shadow 0.2s;
+}
+
+.threat-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.threat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.threat-card-badges {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.severity-badge,
+.category-badge {
+  padding: 0.25rem 0.625rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+.threat-card-score {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.score-label {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.score-value {
+  color: #1a1a2e;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.threat-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.threat-card-title {
+  color: #1a1a2e;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.4;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.2s;
+}
+
+.threat-card-title:hover {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.threat-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.meta-source {
+  font-weight: 600;
+}
+
+.meta-separator {
+  color: #cbd5e1;
+}
+
+.meta-time {
+  font-style: italic;
+}
+
+.threat-card-summary {
+  color: #475569;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.summary-toggle {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.summary-toggle:hover {
+  text-decoration: underline;
+}
+
+.threat-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-top: 0.25rem;
+}
+
+.tag {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.tag-cve {
+  background-color: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fcd34d;
+}
+
+.tag-ttp {
+  background-color: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #93c5fd;
+}
+
+.tag-default {
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.tag-more {
+  background-color: #f8fafc;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+}

@@ -1,0 +1,28 @@
+# Swarm TM Frontend - Docker Compose Configuration
+# React 19 + Vite threat modeling dashboard
+
+version: '3.8'
+
+services:
+  frontend:
+    build: .
+    container_name: swarm-tm-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    environment:
+      # Backend API URL configuration
+      - VITE_API_BASE_URL=${VITE_API_BASE_URL:-http://localhost:8000}
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    networks:
+      - swarm-network
+
+networks:
+  # Network for connecting to backend (if running locally)
+  swarm-network:
+    driver: bridge
