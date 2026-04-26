@@ -7,7 +7,8 @@ FROM node:20-slim AS build
 WORKDIR /app
 
 # Accept build-time argument for backend API URL
-ARG VITE_API_BASE_URL=http://localhost:8000
+# Hardcoded for Zeabur deployment - change this value if backend URL changes
+ARG VITE_API_BASE_URL=https://swarm-tm-backend.zeabur.app
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 
 # Copy package files
