@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Shield, Target, Circle } from 'lucide-react';
+import { Shield, Target, Circle, Search } from 'lucide-react';
 import { checkHealth } from '../api/client';
 import './Layout.css';
 
@@ -68,6 +68,13 @@ function Layout({ children }) {
             >
               <Target size={20} />
               <span>Threat Model</span>
+            </Link>
+            <Link
+              to="/cve"
+              className={`nav-item ${isActive('/cve') ? 'active' : ''}`}
+            >
+              <Search size={20} />
+              <span>CVE Search</span>
             </Link>
           </nav>
         </aside>

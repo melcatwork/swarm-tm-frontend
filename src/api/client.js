@@ -7,9 +7,12 @@
 
 import axios from 'axios';
 
+// Export API base URL for direct fetch calls (used by CVE search page)
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
 // Create axios instance with base configuration
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000',
+  baseURL: API_BASE_URL,
   timeout: 1800000, // 30 minutes (increased for long-running LLM operations)
   headers: {
     'Content-Type': 'application/json',

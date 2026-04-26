@@ -4,17 +4,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ---
 
-# Swarm TM Frontend
+# Swarm TM Frontend (Unified with CVE Intelligence)
 
-React 19 + Vite threat modeling dashboard.
+React 19 + Vite threat intelligence and modeling dashboard with integrated CVE search.
 
 **Repository**: https://github.com/redcountryroad/swarm-tm-frontend (split from monorepo 2026-04-23)  
 **Backend**: https://github.com/redcountryroad/swarm-tm-backend
 
 ## Project Structure
 
-Frontend-only repository:
+Unified frontend repository:
 - `src/` — React application (components, pages, API client, utilities)
+  - `pages/CveSearchPage.jsx` — **NEW**: CVE intelligence page
 - `public/` — Static assets
 - `docs/` — Architecture diagrams and screenshots
 
@@ -100,9 +101,86 @@ cd swarm-tm-frontend
 npm run dev
 ```
 
+## CVE Search Page (NEW)
+
+### Overview
+
+**Component**: `src/pages/CveSearchPage.jsx` (631 lines)
+
+Provides CVE vulnerability intelligence with MITRE ATT&CK kill chain mapping and visualization.
+
+### Features
+
+1. **CVE Search**
+   - Search by product name (e.g., "log4j", "exchange")
+   - Direct CVE ID lookup (e.g., "CVE-2021-44228")
+   - Results sorted by CVSS score (highest first)
+
+2. **Kill Chain Visualization**
+   - Mermaid flowchart diagrams
+   - Color-coded MITRE ATT&CK tactics (12 phases)
+   - Technique ID mapping (T-numbers)
+
+3. **Vulnerability Intelligence**
+   - Patches and vendor advisories
+   - Mitigation recommendations
+   - Detection methods (YARA, Splunk, Snort rules)
+   - Recovery and remediation steps
+
+4. **CISA KEV Tab**
+   - Known Exploited Vulnerabilities list
+   - Latest 20 entries with dates
+   - Vendor and product information
+
+### Dependencies
+
+- **mermaid** (^10.6.1) - Kill chain diagram rendering
+- **React 19** - Component framework
+- **fetch API** - Direct HTTP calls to `/api/cve/*` endpoints
+
+### API Integration
+
+Uses direct `fetch()` calls instead of axios for CVE endpoints:
+
+```javascript
+import { API_BASE_URL } from '../api/client'
+const CVE_API_BASE = `${API_BASE_URL}/cve`
+
+// Search CVEs
+fetch(`${CVE_API_BASE}/search?product=log4j&limit=10`)
+
+// Get ATT&CK mapping
+fetch(`${CVE_API_BASE}/attack/CVE-2021-44228`)
+
+// Get CISA KEV list
+fetch(`${CVE_API_BASE}/cisa-kev/list?limit=20`)
+```
+
+### Mermaid Integration
+
+Diagram rendering with `mermaid.render()`:
+
+```javascript
+const { svg } = await mermaid.render('mermaid-graph', graphDefinition)
+mermaidRef.current.innerHTML = svg
+```
+
+### Styling
+
+- Inline styles for dark theme consistency
+- Gradient backgrounds (`#00d4ff` to `#7c3aed`)
+- Color-coded CVSS severity badges
+- Responsive two-column layout
+
+### Known Issues
+
+1. **Mermaid security**: Uses permissive security settings for custom styling
+2. **No pagination**: Search results limited to 10 CVEs
+3. **Rate limits**: NVD API has 5 requests per 30 seconds without API key
+
 ## Known Limitations
 
 1. **No streaming progress**: Long-running operations (14-30 min) show loading spinner without real-time updates.
 2. **Environment variables at build time**: Vite requires env vars set before `npm run build`, not at runtime.
-3. **Large component files**: ThreatModelPage could be split into smaller, focused components for better maintainability.
+3. **Large component files**: ThreatModelPage and CveSearchPage could be split into smaller, focused components for better maintainability.
 4. **No state management library**: Uses local state with props drilling. Could benefit from Context API or Zustand for complex state.
