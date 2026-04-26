@@ -13,14 +13,9 @@ services:
       context: .
 
       # Build arguments (passed to docker build)
-      # This ensures VITE_API_BASE_URL is injected at build time
+      # Backend URL is hardcoded here for reliable injection during build
       buildArgs:
-        VITE_API_BASE_URL: ${VITE_API_BASE_URL}
-
-    # Environment Variables
-    # Set this in Zeabur Dashboard before deployment
-    env:
-      VITE_API_BASE_URL: http://localhost:8000
+        VITE_API_BASE_URL: https://swarm-tm-backend.zeabur.app
 
     # Port Configuration (nginx will serve on port 80 internally)
     port: 80
@@ -60,36 +55,29 @@ services:
 #
 # 1. Deploy Backend First:
 #    - Deploy swarm-tm-backend to Zeabur
-#    - Note the backend URL: https://swarm-tm-backend-xxx.zeabur.app
+#    - Note the backend URL: https://swarm-tm-backend.zeabur.app
 #
-# 2. Update VITE_API_BASE_URL:
-#    - Option A: Edit this file before pushing to GitHub
-#      VITE_API_BASE_URL: https://swarm-tm-backend-xxx.zeabur.app
+# 2. Backend URL Configuration:
+#    - Backend URL is hardcoded in buildArgs above (line 18)
+#    - This ensures reliable injection during Docker build
+#    - To change URL: Edit line 18 and push to GitHub
 #
-#    - Option B: Set in Zeabur Dashboard (BEFORE first deployment)
-#      Dashboard → Service → Environment Variables
-#      VITE_API_BASE_URL = https://swarm-tm-backend-xxx.zeabur.app
-#
-#    ⚠️ IMPORTANT: This must be set BEFORE deployment
-#    Vite injects env vars at build time, not runtime
+#    ⚠️ IMPORTANT: Vite injects env vars at BUILD time, not runtime
+#    The hardcoded approach is most reliable for Zeabur deployments
 #
 # 3. Deploy Frontend:
-#    - Push to GitHub or use Zeabur CLI
-#    - Zeabur will automatically use this configuration
+#    - Push to GitHub (Zeabur auto-deploys)
 #    - Wait for build to complete (2-5 minutes)
+#    - Check build logs: Should show ARG VITE_API_BASE_URL=https://swarm-tm-backend.zeabur.app
 #
 # 4. Update Backend CORS:
 #    - After frontend deployment, get frontend URL
 #    - Update backend environment variable:
-#      CORS_ORIGINS=https://swarm-tm-frontend-yyy.zeabur.app
+#      CORS_ORIGINS=https://swarm-tm-frontend.zeabur.app,http://localhost:5173
 #    - Redeploy backend or restart service
 #
 # 5. Verify:
 #    - Visit frontend URL
 #    - Check for green "Backend: Healthy" banner
+#    - If backend unreachable, error should show correct URL (not localhost:8000)
 #    - Test uploading IaC file and running threat model
-#
-# 6. To Change Backend URL Later:
-#    - Update VITE_API_BASE_URL in Zeabur Dashboard
-#    - Trigger rebuild/redeploy (push to GitHub or manual redeploy)
-#    - Wait for new build with updated URL
