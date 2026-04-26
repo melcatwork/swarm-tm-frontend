@@ -15,7 +15,8 @@ ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 COPY package*.json ./
 
 # Install dependencies (including devDependencies for build)
-RUN npm ci
+# Use npm install instead of npm ci since package-lock.json may be out of sync
+RUN npm install
 
 # Copy source code
 COPY . .
