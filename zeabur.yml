@@ -5,36 +5,22 @@ name: swarm-tm-frontend
 
 services:
   - name: frontend
-    type: static
+    type: dockerfile
 
     # Build Configuration
     build:
-      # Node.js version
-      runtime: node-20
+      dockerfile: Dockerfile
+      context: .
 
-      # Install command
-      install: npm install
-
-      # Build command
-      build: npm run build
-
-      # Output directory (Vite builds to dist/)
-      outputDirectory: dist
-
-      # Static file serving with nginx
-      staticServe: true
+      # Build arguments (passed to docker build)
+      # This ensures VITE_API_BASE_URL is injected at build time
+      buildArgs:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL}
 
     # Environment Variables
-    # CRITICAL: These are injected at BUILD TIME by Vite, not runtime
+    # Set this in Zeabur Dashboard before deployment
     env:
-      # Backend API URL (REQUIRED - update after backend deployment)
-      # IMPORTANT: Override this in Zeabur Dashboard for production
-      VITE_API_BASE_URL: https://swarm-tm-backend-[your-id].zeabur.app
-
-      # For local development:
-      # VITE_API_BASE_URL: http://localhost:8000
-      # Or custom domain:
-      # VITE_API_BASE_URL: https://api.yourdomain.com
+      VITE_API_BASE_URL: http://localhost:8000
 
     # Port Configuration (nginx will serve on port 80 internally)
     port: 80
@@ -69,32 +55,6 @@ services:
       X-Content-Type-Options: nosniff
       X-XSS-Protection: "1; mode=block"
       Referrer-Policy: no-referrer-when-downgrade
-
-# Alternative Configuration: Using Dockerfile
-# If you prefer nginx-based deployment with Dockerfile instead of static hosting:
-#
-# services:
-#   - name: frontend
-#     type: dockerfile
-#
-#     build:
-#       dockerfile: Dockerfile
-#       context: .
-#
-#       # Build arguments (passed to docker build)
-#       buildArgs:
-#         VITE_API_BASE_URL: ${VITE_API_BASE_URL}
-#
-#     env:
-#       VITE_API_BASE_URL: http://localhost:8000
-#
-#     port: 80
-#
-#     healthCheck:
-#       path: /
-#       interval: 30
-#       timeout: 10
-#       retries: 3
 
 # Instructions for deployment:
 #
