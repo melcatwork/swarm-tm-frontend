@@ -7,7 +7,7 @@ mermaid.initialize({
   startOnLoad: false,
 })
 
-const CVE_API_BASE = `${API_BASE_URL}/cve`
+const CVE_API_BASE = `${API_BASE_URL}/api/cve`
 
 // MITRE ATT&CK tactic color palette
 const TACTIC_COLORS = {
