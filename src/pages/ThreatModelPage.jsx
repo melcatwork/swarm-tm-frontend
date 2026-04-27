@@ -32,7 +32,7 @@ function ThreatModelPage() {
 
   // LLM model selection state
   const [availableModels, setAvailableModels] = useState([]);
-  const [selectedModel, setSelectedModel] = useState('anthropic.claude-3-sonnet-20240229-v1:0'); // Default to Claude 3 Sonnet (AWS Bedrock)
+  const [selectedModel, setSelectedModel] = useState(''); // Default to "Use default from .env"
 
   // CSA CII impact score state
   const [impactScore, setImpactScore] = useState(3); // Default: Moderate
